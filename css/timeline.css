@@ -1,0 +1,572 @@
+/* ==========================================================================
+   MCU: THE SACRED TIMELINE - MAIN TIMELINE & VIRTUALIZED CARDS
+   ========================================================================== */
+
+/* Main Timeline Section (Tall Sticky Container for Native Scroll Travel) */
+#timeline-section {
+  position: relative;
+  width: 100%;
+  /* Height is dynamically set in JS to drive horizontal travel */
+  height: 900vh;
+}
+
+.timeline-sticky-viewport {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Filter Bar (Sticky beneath Top Nav) */
+.filter-bar-container {
+  position: absolute;
+  top: var(--header-height);
+  left: 0;
+  right: 0;
+  z-index: 500;
+  padding: 12px clamp(16px, 4vw, 40px);
+  background: linear-gradient(180deg, rgba(5, 6, 10, 0.85) 0%, rgba(5, 6, 10, 0.4) 80%, transparent 100%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.filter-bar-container::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-chips-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.filter-chip {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--color-text-secondary);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 16px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--duration-fast) var(--ease-smooth);
+}
+
+.filter-chip:hover {
+  background: rgba(255, 157, 46, 0.12);
+  border-color: var(--color-tva-amber);
+  color: #FFF;
+}
+
+.filter-chip.active {
+  background: var(--color-tva-amber);
+  border-color: var(--color-tva-amber);
+  color: #000;
+  font-weight: 700;
+  box-shadow: 0 0 12px rgba(255, 157, 46, 0.4);
+}
+
+.filter-divider {
+  width: 1px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.12);
+  margin: 0 4px;
+}
+
+/* Horizontal Track (Transformed by Scroll Engine) */
+.timeline-track-stage {
+  position: absolute;
+  top: 52%;
+  left: 0;
+  width: 100%;
+  height: 700px;
+  transform: translateY(-50%);
+  will-change: transform;
+  pointer-events: none;
+}
+
+.timeline-track-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  display: flex;
+  pointer-events: auto;
+  contain: layout;
+}
+
+/* Connector SVG Layer behind cards */
+#timeline-connectors-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.timeline-connector-path {
+  fill: none;
+  stroke: rgba(0, 229, 255, 0.35);
+  stroke-width: 2;
+  stroke-dasharray: 4 4;
+  animation: dash-flow 20s linear infinite;
+}
+
+@keyframes dash-flow {
+  from { stroke-dashoffset: 200; }
+  to { stroke-dashoffset: 0; }
+}
+
+/* Two Lanes Structure */
+.timeline-lane {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 380px;
+}
+
+.lane-films {
+  top: 20px;
+  z-index: 10;
+}
+
+.lane-series {
+  top: 420px;
+  z-index: 8;
+  opacity: 0.95;
+}
+
+/* Saga & Phase Banners */
+.saga-banner {
+  position: absolute;
+  top: -65px;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  pointer-events: none;
+}
+
+.saga-banner::after {
+  content: '';
+  display: block;
+  height: 2px;
+  width: 180px;
+  background: linear-gradient(90deg, rgba(255, 157, 46, 0.4), transparent);
+}
+
+.phase-marker {
+  position: absolute;
+  top: -30px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--color-tva-amber);
+  text-transform: uppercase;
+  border-left: 2px solid var(--color-tva-amber);
+  padding-left: 8px;
+  pointer-events: none;
+}
+
+/* Year Axis Line & Ticks */
+.axis-year-mark {
+  position: absolute;
+  bottom: 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.axis-year-tick {
+  width: 1px;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ==========================================================================
+   NODE POSTER CARD COMPONENT (3D TILT & SPECULAR GLARE)
+   ========================================================================== */
+
+.timeline-node-card {
+  position: absolute;
+  width: var(--card-width);
+  height: var(--card-height);
+  border-radius: 12px;
+  cursor: pointer;
+  contain: layout paint;
+  perspective: 1000px;
+  outline: none;
+  transition: opacity var(--duration-normal) var(--ease-smooth);
+}
+
+.timeline-node-card:focus-visible {
+  box-shadow: 0 0 0 3px var(--color-tva-amber), var(--shadow-tva-heavy);
+}
+
+.card-inner-3d {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--color-surface-elevated);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-card);
+  transform-style: preserve-3d;
+  transition: transform var(--duration-fast) var(--ease-out),
+              box-shadow var(--duration-fast) var(--ease-out),
+              border-color var(--duration-fast) var(--ease-out);
+  will-change: transform;
+}
+
+.timeline-node-card:hover .card-inner-3d {
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--card-accent, var(--color-tva-amber));
+}
+
+/* Specular Glare Overlay */
+.card-specular-glare {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.22) 0%, transparent 65%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--duration-fast);
+  mix-blend-mode: overlay;
+  z-index: 5;
+}
+
+.timeline-node-card:hover .card-specular-glare {
+  opacity: 1;
+}
+
+/* Poster Artwork */
+.card-poster-wrapper {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #000;
+}
+
+.card-poster-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--duration-normal) var(--ease-smooth);
+}
+
+.timeline-node-card:hover .card-poster-img {
+  transform: scale(1.04);
+}
+
+/* Card Metadata Ribbon */
+.card-meta-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24px 14px 14px;
+  background: linear-gradient(180deg, transparent 0%, rgba(5, 6, 10, 0.6) 35%, rgba(5, 6, 10, 0.96) 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 4;
+}
+
+.card-phase-badge {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--card-accent, var(--color-tva-amber));
+  text-transform: uppercase;
+}
+
+.card-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 800;
+  color: #FFF;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-subtext {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-rating-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-weight: 700;
+  color: #FBBF24;
+}
+
+/* Special Node: Doomsday Live Countdown Portal */
+.doomsday-card {
+  border: 1px solid rgba(16, 185, 129, 0.5) !important;
+  box-shadow: 0 0 35px rgba(16, 185, 129, 0.3) !important;
+}
+
+.doomsday-countdown-box {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  border-radius: 8px;
+  padding: 8px;
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+  z-index: 6;
+}
+
+.countdown-unit {
+  display: flex;
+  flex-direction: column;
+}
+
+.countdown-val {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 800;
+  color: #10B981;
+}
+
+.countdown-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+/* Special Node: Secret Wars Unwritten Future */
+.secret-wars-card {
+  border: 1px dashed rgba(139, 92, 246, 0.6) !important;
+  box-shadow: 0 0 40px rgba(139, 92, 246, 0.4) !important;
+  animation: pulse-portal 3s infinite ease-in-out;
+}
+
+@keyframes pulse-portal {
+  0%, 100% { box-shadow: 0 0 25px rgba(139, 92, 246, 0.3); }
+  50% { box-shadow: 0 0 55px rgba(139, 92, 246, 0.7); }
+}
+
+/* ==========================================================================
+   BOTTOM SCRUBBER / MINIMAP COMPONENT
+   ========================================================================== */
+
+.minimap-scrubber {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--scrubber-height);
+  background: rgba(5, 6, 10, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-top: 1px solid var(--color-border-subtle);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  padding: 0 clamp(16px, 4vw, 40px);
+  gap: 20px;
+}
+
+.scrubber-track-outer {
+  position: relative;
+  flex-grow: 1;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.scrubber-rail {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+.scrubber-ticks-container {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+
+.scrubber-node-tick {
+  position: absolute;
+  width: 4px;
+  height: 10px;
+  border-radius: 2px;
+  transform: translateX(-50%);
+  transition: transform var(--duration-fast);
+}
+
+.scrubber-node-tick:hover {
+  transform: translateX(-50%) scaleY(1.8);
+}
+
+.scrubber-thumb {
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  width: 32px;
+  height: 18px;
+  border-radius: 9px;
+  background: var(--color-tva-amber);
+  box-shadow: 0 0 15px var(--color-tva-amber);
+  transform: translate(-50%, -50%);
+  cursor: grab;
+  z-index: 10;
+  transition: transform 0.05s ease-out;
+}
+
+.scrubber-thumb:active {
+  cursor: grabbing;
+  transform: translate(-50%, -50%) scale(1.15);
+}
+
+.scrubber-info-box,
+.scrubber-current-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  min-width: 220px;
+}
+
+.scrubber-title,
+.scrubber-node-title {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #FFF;
+  max-width: 170px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.scrubber-year,
+.scrubber-node-year {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-tva-amber);
+}
+
+.scrubber-status-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.status-indicator-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 10px #10B981;
+  animation: pulse-glow 1.8s infinite ease-in-out;
+}
+
+.status-indicator-text {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--color-text-muted);
+}
+
+/* Responsive Rules for Small Devices (Vertical Fallback) */
+@media (max-width: 768px) {
+  #timeline-section {
+    height: auto;
+  }
+  .timeline-sticky-viewport {
+    position: relative;
+    height: auto;
+    overflow: visible;
+    padding-top: calc(var(--header-height) + 60px);
+    padding-bottom: 80px;
+  }
+  .timeline-track-stage {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    transform: none !important;
+  }
+  .timeline-track-content {
+    position: relative;
+    flex-direction: column;
+    padding: 20px;
+    gap: 24px;
+  }
+  .timeline-lane {
+    position: relative;
+    top: 0 !important;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .timeline-node-card {
+    position: relative;
+    left: 0 !important;
+    width: 100%;
+    max-width: 340px;
+    height: 480px;
+    margin: 0 auto;
+  }
+  .minimap-scrubber {
+    display: none;
+  }
+}

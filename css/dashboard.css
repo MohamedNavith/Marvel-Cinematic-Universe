@@ -1,0 +1,191 @@
+/* ==========================================================================
+   MCU: THE SACRED TIMELINE - "THE MULTIVERSE IN NUMBERS" DASHBOARD
+   ========================================================================== */
+
+#dashboard-section {
+  position: relative;
+  z-index: 100;
+  background: var(--color-surface-base);
+  border-top: 1px solid var(--color-border-subtle);
+  padding: 80px clamp(16px, 5vw, 60px);
+}
+
+.dashboard-header {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 50px;
+}
+
+.dashboard-badge {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  color: var(--color-tva-amber);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.dashboard-title {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 5vw, 54px);
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #FFF;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.dashboard-subtitle {
+  font-size: 15px;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+/* Dashboard Metrics Summary Ribbon */
+.dashboard-kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto 50px;
+}
+
+.kpi-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: transform var(--duration-fast), border-color var(--duration-fast);
+}
+
+.kpi-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-tva-amber);
+}
+
+.kpi-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.kpi-number {
+  font-family: var(--font-mono);
+  font-size: 32px;
+  font-weight: 800;
+  color: #FFF;
+}
+
+.kpi-subtext {
+  font-size: 12px;
+  color: var(--color-tva-amber);
+}
+
+/* Main Dashboard Charts Grid */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-card {
+  background: rgba(17, 24, 39, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-card-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: #FFF;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Interactive Bar Race / Leaderboard */
+.leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.leaderboard-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.leaderboard-rank {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  width: 24px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.leaderboard-bar-wrap {
+  flex-grow: 1;
+  background: rgba(255, 255, 255, 0.04);
+  height: 28px;
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.leaderboard-bar-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255, 157, 46, 0.7), rgba(236, 29, 36, 0.8));
+  border-radius: 6px;
+  transition: width 0.8s var(--ease-smooth);
+}
+
+.leaderboard-name {
+  position: relative;
+  z-index: 2;
+  font-size: 13px;
+  font-weight: 600;
+  color: #FFF;
+  padding-left: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.leaderboard-val {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+  width: 90px;
+  text-align: right;
+}
+
+@media (max-width: 600px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
