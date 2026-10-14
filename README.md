@@ -1,11 +1,25 @@
 # MCU: THE SACRED TIMELINE
 ### Award-Level Interactive Cinematic Chronometer & Case Study Archive (2008–2027)
 
+<p align="center">
+  <img src="assets/img/Sacred-Timeline-4k.webp" alt="The Sacred Timeline 4K Panoramic View" width="100%" style="border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/MCU-All_Phases_1_to_6-e23636?style=for-the-badge&logo=marvel" alt="MCU All Phases">
+  <img src="https://img.shields.io/badge/Framework-Zero_Dependencies_(Vanilla_ES6)-107c41?style=for-the-badge" alt="Zero Dependencies">
+  <img src="https://img.shields.io/badge/Performance-60_FPS_GPU_Accelerated-0078d4?style=for-the-badge" alt="60 FPS GPU Accelerated">
+  <img src="https://img.shields.io/badge/Audio-Web_Audio_API_Synthesizer-ffd54f?style=for-the-badge" alt="Web Audio API">
+  <img src="https://img.shields.io/badge/Hosting-GitHub_Pages_Live-success?style=for-the-badge&logo=github" alt="GitHub Pages">
+</p>
+
 > **"For all time. Always."**
 
 An award-level, zero-framework interactive web application documenting every theatrical film, Disney+ series, Special Presentation, and canonical milestone across the Marvel Cinematic Universe—from *Iron Man* (2008) to *Avengers: Doomsday* (December 18, 2026) and the upcoming *Avengers: Secret Wars* (2027) teaser node.
 
 Built as an academic Open Lab case study and creative technology portfolio piece exploring GPU-accelerated horizontal translation, live Web Audio synthesis, procedural particle systems, and zero-runtime-overhead design.
+
+🌐 **Live GitHub Pages URL:** [https://mohamednavith.github.io/Marvel-Cinematic-Universe/](https://mohamednavith.github.io/Marvel-Cinematic-Universe/)
 
 ---
 
